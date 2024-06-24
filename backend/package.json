@@ -1,0 +1,12 @@
+{
+  "name": "backend",
+  "scripts": {
+    "build": "spago build",
+    "run": "spago run"
+  },
+  "dependencies": {
+    "purescript": "^0.15.15",
+    "purs-tidy": "^0.11.0",
+    "spago": "^0.21.0"
+  }
+}
