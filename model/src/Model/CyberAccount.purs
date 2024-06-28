@@ -11,10 +11,10 @@ import FFI.Random as FFI
 type Seed = Int
 
 -- 私钥
-type PrivateKey = Int
+type PrivateKey = String
 
 -- 公钥
-type PublicKey = Int
+type PublicKey = String
 
 -- 地址
 type CyberAddress = String
@@ -32,8 +32,8 @@ instance showCyberAccount :: Show CyberAccount where
   show (MakeCyberAccount { seed, privateKey, publicKey, cyberAddress }) = stringify $
     ( fromArray $
         [ jsonSingletonObject "seed" (encodeInt seed)
-        , jsonSingletonObject "privateKey" (encodeInt privateKey)
-        , jsonSingletonObject "publicKey" (encodeInt publicKey)
+        , jsonSingletonObject "privateKey" (encodeString privateKey)
+        , jsonSingletonObject "publicKey" (encodeString publicKey)
         , jsonSingletonObject "cyberAddress" (encodeString cyberAddress)
         ]
     )
@@ -44,12 +44,12 @@ generateSecureRandom = FFI.generateSecureRandom 4
 
 -- 生成私钥
 generatePrivateKey ∷ Seed → PrivateKey
-generatePrivateKey _ = 1
+generatePrivateKey _ = ""
 
 -- // TODO: 使用比特币相同方案生成公钥
 -- 生成公钥
 generatePublicKey :: PrivateKey -> PublicKey
-generatePublicKey _ = 1
+generatePublicKey _ = ""
 
 -- // TODO: 使用比特币相同方案生成地址
 -- 生成地址

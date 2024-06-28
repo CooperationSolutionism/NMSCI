@@ -4,6 +4,7 @@ import Prelude
 
 import Effect (Effect)
 import Effect.Class.Console (log)
+import FFI.ECC (genKey)
 import Model.CyberAccount (CyberAccount(..), generateSecureRandom)
 
 testCyberAccountJson :: CyberAccount -> Effect Unit
@@ -14,14 +15,18 @@ main = do
   log "测试cyberAccount的show"
   cyberAccount <- pure $ MakeCyberAccount
     { seed: 1
-    , privateKey: 1
-    , publicKey: 1
-    , cyberAddress: "a"
+    , privateKey: ""
+    , publicKey: ""
+    , cyberAddress: ""
     }
   testCyberAccountJson (cyberAccount)
 
   log "测试生成随机数"
-  value <- generateSecureRandom
-  log $ show value
+  randomNum <- generateSecureRandom
+  log $ show randomNum
+
+  log "测试生成ECC密钥"
+  key <- genKey
+  log $ show key
 
   log "测试完成"
