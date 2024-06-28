@@ -3,17 +3,12 @@ module Model.CyberAccount where
 import Prelude
 
 import Data.Argonaut (stringify)
-import Data.Argonaut.Encode.Encoders (encodeInt, encodeString)
+import Data.Argonaut.Encode.Encoders (encodeString)
 import Data.Argonaut.Core (fromObject)
-import Effect (Effect)
-import FFI.Random as FFI
 import Data.Tuple (Tuple(..))
 import Foreign.Object as FO
 
--- 随机数种子
-type Seed = Int
-
--- 私钥
+-- 随机私钥
 type PrivateKey = String
 
 -- 公钥
@@ -24,31 +19,21 @@ type CyberAddress = String
 
 -- 账号
 data CyberAccount = MakeCyberAccount
-  { seed :: Seed
-  , privateKey :: PrivateKey
+  { privateKey :: PrivateKey
   , publicKey :: PublicKey
   , cyberAddress :: CyberAddress
   }
 
 -- 显示账号信息
 instance showCyberAccount :: Show CyberAccount where
-  show (MakeCyberAccount { seed, privateKey, publicKey, cyberAddress }) = stringify $
+  show (MakeCyberAccount { privateKey, publicKey, cyberAddress }) = stringify $
     fromObject
       ( FO.fromFoldable
-          [ Tuple "seed" (encodeInt seed)
-          , Tuple "privateKey" (encodeString privateKey)
+          [ Tuple "privateKey" (encodeString privateKey)
           , Tuple "publicKey" (encodeString publicKey)
           , Tuple "cyberAddress" (encodeString cyberAddress)
           ]
       )
-
--- 生成密码学安全的伪随机数
-generateSecureRandom :: Effect Int
-generateSecureRandom = FFI.generateSecureRandom 4
-
--- 生成私钥
-generatePrivateKey ∷ Seed → PrivateKey
-generatePrivateKey _ = ""
 
 -- // TODO: 使用比特币相同方案生成公钥
 -- 生成公钥
@@ -60,26 +45,17 @@ generatePublicKey _ = ""
 generateCyberAddress :: PublicKey -> CyberAddress
 generateCyberAddress _ = "ABCD"
 
--- 通过种子生成公钥
-generatePublicKeyBySeed :: Seed -> PublicKey
-generatePublicKeyBySeed = generatePublicKey <<< generatePrivateKey
+-- 通过私钥生成地址
+generateCyberAddressByPrivateKey :: PrivateKey -> CyberAddress
+generateCyberAddressByPrivateKey = generateCyberAddress <<< generatePublicKey
 
--- 通过种子生成地址
-generateCyberAddressBySeed :: Seed -> CyberAddress
-generateCyberAddressBySeed = generateCyberAddress <<< generatePublicKey <<< generatePrivateKey
-
--- 通过种子创建账号
-createCyberAccountBySeed :: Seed -> CyberAccount
-createCyberAccountBySeed seed = MakeCyberAccount
-  { seed
-  , privateKey: generatePrivateKey seed
-  , publicKey: generatePublicKeyBySeed seed
-  , cyberAddress: generateCyberAddressBySeed seed
+-- 通过私钥创建账号
+createCyberAccountByPrivateKey :: PrivateKey -> CyberAccount
+createCyberAccountByPrivateKey privateKey = MakeCyberAccount
+  { privateKey
+  , publicKey: generatePublicKey privateKey
+  , cyberAddress: generateCyberAddressByPrivateKey privateKey
   }
-
--- 获取种子
-getSeed :: CyberAccount -> Seed
-getSeed (MakeCyberAccount { seed }) = seed
 
 -- 获取地址
 getCyberAddress :: CyberAccount -> CyberAddress

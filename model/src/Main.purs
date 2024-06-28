@@ -4,8 +4,8 @@ import Prelude
 
 import Effect (Effect)
 import Effect.Console (log)
-import Model.CyberAccount (createCyberAccountBySeed)
+import Model.CyberAccount (createCyberAccountByPrivateKey)
 
 main :: Effect Unit
 main = do
-  log $ show $ createCyberAccountBySeed 1
+  log $ show $ createCyberAccountByPrivateKey "1"
