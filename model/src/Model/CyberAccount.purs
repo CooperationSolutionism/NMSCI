@@ -2,10 +2,13 @@ module Model.CyberAccount where
 
 import Prelude
 
-import Data.Argonaut (fromArray, jsonSingletonObject, stringify)
+import Data.Argonaut (stringify)
 import Data.Argonaut.Encode.Encoders (encodeInt, encodeString)
+import Data.Argonaut.Core (fromObject)
 import Effect (Effect)
 import FFI.Random as FFI
+import Data.Tuple (Tuple(..))
+import Foreign.Object as FO
 
 -- 随机数种子
 type Seed = Int
@@ -30,13 +33,14 @@ data CyberAccount = MakeCyberAccount
 -- 显示账号信息
 instance showCyberAccount :: Show CyberAccount where
   show (MakeCyberAccount { seed, privateKey, publicKey, cyberAddress }) = stringify $
-    ( fromArray $
-        [ jsonSingletonObject "seed" (encodeInt seed)
-        , jsonSingletonObject "privateKey" (encodeString privateKey)
-        , jsonSingletonObject "publicKey" (encodeString publicKey)
-        , jsonSingletonObject "cyberAddress" (encodeString cyberAddress)
-        ]
-    )
+    fromObject
+      ( FO.fromFoldable
+          [ Tuple "seed" (encodeInt seed)
+          , Tuple "privateKey" (encodeString privateKey)
+          , Tuple "publicKey" (encodeString publicKey)
+          , Tuple "cyberAddress" (encodeString cyberAddress)
+          ]
+      )
 
 -- 生成密码学安全的伪随机数
 generateSecureRandom :: Effect Int

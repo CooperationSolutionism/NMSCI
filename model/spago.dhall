@@ -14,9 +14,12 @@ to generate this file without the comments in this block.
 , dependencies =
   [ "argonaut"
   , "argonaut-codecs"
+  , "argonaut-core"
   , "console"
   , "effect"
+  , "foreign-object"
   , "prelude"
+  , "tuples"
   ]
 , packages = ./packages.dhall
 , sources = [ "src/**/*.purs", "test/**/*.purs" ]
