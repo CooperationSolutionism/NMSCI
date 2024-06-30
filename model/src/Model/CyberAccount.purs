@@ -3,9 +3,11 @@ module Model.CyberAccount where
 import Prelude
 
 import Data.Argonaut (stringify)
-import Data.Argonaut.Encode.Encoders (encodeString)
 import Data.Argonaut.Core (fromObject)
+import Data.Argonaut.Encode.Encoders (encodeString)
 import Data.Tuple (Tuple(..))
+import FFI.Bitcoin (genAddrByPubKey)
+import FFI.ECC (genPubKeyByPrvKey)
 import Foreign.Object as FO
 
 -- 随机私钥
@@ -35,15 +37,13 @@ instance showCyberAccount :: Show CyberAccount where
           ]
       )
 
--- // TODO: 使用比特币相同方案生成公钥
 -- 生成公钥
 generatePublicKey :: PrivateKey -> PublicKey
-generatePublicKey _ = ""
+generatePublicKey a = genPubKeyByPrvKey a
 
--- // TODO: 使用比特币相同方案生成地址
 -- 生成地址
 generateCyberAddress :: PublicKey -> CyberAddress
-generateCyberAddress _ = "ABCD"
+generateCyberAddress a = genAddrByPubKey a
 
 -- 通过私钥生成地址
 generateCyberAddressByPrivateKey :: PrivateKey -> CyberAddress
