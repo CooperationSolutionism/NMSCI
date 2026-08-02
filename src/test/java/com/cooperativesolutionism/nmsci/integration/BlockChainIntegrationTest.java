@@ -63,7 +63,7 @@ class BlockChainIntegrationTest extends NmsciIntegrationTestBase {
         assertEquals(32, generatedBlock.getMerkleRoot().length);
         assertEquals(64, generatedBlock.getCentralSignature().length);
         assertEquals("blk00000000.dat", generatedBlock.getDatFilepath());
-        assertEquals("source_code_v2.zip", generatedBlock.getSourceCodeZipFilepath());
+        assertEquals("source_code_v3.zip", generatedBlock.getSourceCodeZipFilepath());
         assertEquals(0L, msgAbstractRepository.countByIsInBlockFalseOrderByConfirmTimestampAsc());
         assertTrue(msgAbstractRepository.findAll().stream().allMatch(msgAbstract -> Boolean.TRUE.equals(msgAbstract.getIsInBlock())));
 

@@ -10,7 +10,7 @@
     </parent>
     <groupId>com.cooperativesolutionism</groupId>
     <artifactId>nmsci</artifactId>
-    <version>2.0.0</version>
+    <version>2.0.1</version>
     <name>nmsci</name>
     <description>消费意愿数值化衡量系统（Numerical Measurement System for Consumption Intention）</description>
     <properties>

@@ -4,9 +4,18 @@
 
 格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
-> **两套版本说明**：`block-version`（上链区块版本）与软件 SemVer 是两套独立版本。2.0.0 将 `block-version` 升至 **2**，既有 v1 链原地升级；字节/wire 协议与区块头字节数（229）仍冻结。
+> **两套版本说明**：`block-version`（上链区块版本）与软件 SemVer 是两套独立版本。2.0.1 将 `block-version` 升至 **3**，使本次构建绑定独立源码包；字节/wire 协议与区块头字节数（229）仍冻结。
 
-## [2.0.0] - 未发布
+## [2.0.1] - 2026-08-02
+
+### 变更
+- 生产 profile 的注册 PoW 难度由 `0x1f002708` 降至最低难度编码 `0x20ffffff`，与交易及 dev/test/load profile 对齐。
+- `block-version` 由 2 升至 3，验证器支持上限同步升至 3，新区块绑定 `source_code_v3.zip`。
+
+### 升级
+- 本版本不改变字节/wire 协议，也不新增数据库迁移；部署到既有链前仍须按 README 升级流程停止外部写入、排空未入块消息并完成静默校验。
+
+## [2.0.0] - 2026-07-01
 
 面向生产的重构与硬化版本：API 全面 REST 化、引入 Flyway 迁移与安全基线升级、独立链验证器与可观测性、Java 21，以及多轮性能优化。`block-version` 升至 2（既有 v1 链原地升级）。
 
@@ -61,5 +70,6 @@
 ## [1.0.0] - 2025-09-20
 - 首个发布：消费意愿数值化衡量系统（NMSCI）基础实现。
 
+[2.0.1]: https://github.com/Cooperative-Solutionism/NMSCI/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/Cooperative-Solutionism/NMSCI/compare/v1.0.0...v2.0.0
 [1.0.0]: https://github.com/Cooperative-Solutionism/NMSCI/releases/tag/v1.0.0
