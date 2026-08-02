@@ -72,7 +72,7 @@ class ProtocolLifecycleIntegrationTest extends NmsciIntegrationTestBase {
         mockMvc.perform(get("/system/params"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code").value(200))
-                .andExpect(jsonPath("$.data.blockVersion").value(2))
+                .andExpect(jsonPath("$.data.blockVersion").value(3))
                 .andExpect(jsonPath("$.data.centralPubkey").value(ByteArrayUtil.bytesToHex(TestKeyPairs.CENTRAL.pubkey())))
                 .andExpect(jsonPath("$.data.registerDifficultyTargetNbits").value(REGISTER_DIFFICULTY_NBITS))
                 .andExpect(jsonPath("$.data.registerDifficultyTargetNbitsHex").value("0x20ffffff"))
