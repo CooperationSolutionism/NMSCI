@@ -50,7 +50,7 @@
 常用配置项：
 
 ```properties
-nmsci.block-version=1
+nmsci.block-version=3
 nmsci.block-header-size=229
 nmsci.block-max-size=1048576
 nmsci.block-dat-max-size=134217728
@@ -146,11 +146,11 @@ docker compose up -d --build
 ### 仅构建 / 运行镜像
 
 ```bash
-docker build -t nmsci:2.0.0 .
+docker build -t nmsci:2.0.1 .
 docker run --rm -p 8080:8080 --env-file .env \
   -e DB_URL='jdbc:postgresql://<db-host>:5432/nmsci' \
   -v nmsci-data:/app/file -v nmsci-logs:/app/logs \
-  nmsci:2.0.0
+  nmsci:2.0.1
 ```
 
 容器默认 `SPRING_PROFILES_ACTIVE=prod`；JVM 参数可经 `JAVA_TOOL_OPTIONS` 注入（如 `-e JAVA_TOOL_OPTIONS='-Xmx512m'`）。
@@ -240,8 +240,8 @@ HTML 报告输出到 `target/gatling/fulllifecyclesimulation-<时间戳>/index.h
 构建后可以检查产物：
 
 ```bash
-jar tf target/nmsci-2.0.0.jar | grep 'source_code_v'
-unzip -p target/nmsci-2.0.0.jar BOOT-INF/classes/application.properties \
+jar tf target/nmsci-2.0.1.jar | grep 'source_code_v'
+unzip -p target/nmsci-2.0.1.jar BOOT-INF/classes/application.properties \
   | grep -E 'nmsci.block-version|nmsci.source-code-zip-hash'
 ```
 
@@ -250,7 +250,7 @@ unzip -p target/nmsci-2.0.0.jar BOOT-INF/classes/application.properties \
 生产环境启动示例：
 
 ```bash
-java -jar target/nmsci-2.0.0.jar --spring.profiles.active=prod
+java -jar target/nmsci-2.0.1.jar --spring.profiles.active=prod
 ```
 
 部署时必须保留同一套数据库和文件目录。默认生产文件目录为：
@@ -304,7 +304,7 @@ Flyway 会在应用启动时自动执行数据库迁移：已有生产库（非�
    修改 [src/main/resources/application.properties](./src/main/resources/application.properties)：
 
    ```properties
-   nmsci.block-version=2
+   nmsci.block-version=3
    ```
 
    不要手工修改 `nmsci.source-code-zip-hash`。
@@ -324,16 +324,16 @@ Flyway 会在应用启动时自动执行数据库迁移：已有生产库（非�
    构建产物应包含新版本源码包，例如：
 
    ```text
-   BOOT-INF/classes/static/source_code_v2.zip
+   BOOT-INF/classes/static/source_code_v3.zip
    ```
 
 5. 核验 jar 内版本与源码包哈希
 
    ```bash
-   unzip -p target/nmsci-2.0.0.jar BOOT-INF/classes/application.properties \
+   unzip -p target/nmsci-2.0.1.jar BOOT-INF/classes/application.properties \
      | grep -E 'nmsci.block-version|nmsci.source-code-zip-hash'
 
-   jar tf target/nmsci-2.0.0.jar | grep 'source_code_v2.zip'
+   jar tf target/nmsci-2.0.1.jar | grep 'source_code_v3.zip'
    ```
 
    需要确认：
@@ -345,7 +345,7 @@ Flyway 会在应用启动时自动执行数据库迁移：已有生产库（非�
 6. 部署并启动新 jar
 
    ```bash
-   java -jar target/nmsci-2.0.0.jar --spring.profiles.active=prod
+   java -jar target/nmsci-2.0.1.jar --spring.profiles.active=prod
    ```
 
    确保新版本继续使用原数据库和原 `nmsci.file-root-dir`。

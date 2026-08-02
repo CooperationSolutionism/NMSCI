@@ -252,7 +252,7 @@ curl -X POST http://localhost:8080/transaction-records \
     "magicNumber": 1782489477, "magicNumberHex": "0x6a466d85",
     "genesisHash": "0000000000000000000000000000000000000000000000000000000000000000",
     "hashSize": 32, "messageCountFieldSize": 8,
-    "blockVersion": 2, "blockHeaderSize": 229,
+    "blockVersion": 3, "blockHeaderSize": 229,
     "blockMaxSizeBytes": 1048576, "blockDatMaxSizeBytes": 134217728,
     "datFilePrefix": "blk", "datFileSuffix": ".dat", "datFileIndexWidth": 8,
     "sourceCodeZipPrefix": "source_code_v", "sourceCodeZipSuffix": ".zip"

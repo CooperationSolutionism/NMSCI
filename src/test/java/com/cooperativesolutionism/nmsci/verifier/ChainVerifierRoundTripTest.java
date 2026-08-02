@@ -98,32 +98,36 @@ class ChainVerifierRoundTripTest {
 
     @Test
     void acceptsAndLinksVersionUpgradeChain() {
-        // 合法升级：v1 创世块 → v2 次块（生产护栏允许 config v2 ≥ 前块 v1）；验证器在支持 v2 时应全过。
+        // 合法升级：v1 → v2 → v3；生产护栏允许版本单调递增，当前验证器应支持到 v3。
         AssembledBlock genesis = assembleRegisterBlock(
                 null, TestKeyPairs.FLOW_NODE_A, UUID.fromString("11111111-1111-1111-1111-111111111111"), EASY_NBITS, 1);
-        AssembledBlock upgraded = assembleRegisterBlock(
+        AssembledBlock v2 = assembleRegisterBlock(
                 genesis.getBlockInfo(), TestKeyPairs.FLOW_NODE_B, UUID.fromString("22222222-2222-2222-2222-222222222222"), EASY_NBITS, 2);
+        AssembledBlock v3 = assembleRegisterBlock(
+                v2.getBlockInfo(), TestKeyPairs.CONSUME_NODE_A, UUID.fromString("33333333-3333-3333-3333-333333333333"), EASY_NBITS, 3);
 
         ByteArrayOutputStream concatenated = new ByteArrayOutputStream();
         concatenated.writeBytes(genesis.getDatBytes());
-        concatenated.writeBytes(upgraded.getDatBytes());
+        concatenated.writeBytes(v2.getDatBytes());
+        concatenated.writeBytes(v3.getDatBytes());
 
         List<ParsedBlock> blocks = DatBlockReader.readConcatenated(concatenated.toByteArray(), "blk00000000.dat");
         assertEquals(1, blocks.get(0).version());
         assertEquals(2, blocks.get(1).version());
+        assertEquals(3, blocks.get(2).version());
 
-        ChainVerificationResult result = verifier.verify(blocks, optionsWithCentral(2));
-        assertTrue(result.ok(), () -> "期望 v1→v2 升级链在支持 v2 时验证通过，但有失败:\n" + result.render());
+        ChainVerificationResult result = verifier.verify(blocks, optionsWithCentral());
+        assertTrue(result.ok(), () -> "期望 v1→v2→v3 升级链在当前验证器中通过，但有失败:\n" + result.render());
     }
 
     @Test
     void rejectsBlockVersionAboveVerifierSupport() {
-        // v3 区块但验证器默认仅支持到 v2 → 「区块版本号」应判为过新。
-        AssembledBlock v3 = assembleRegisterBlock(
-                null, TestKeyPairs.FLOW_NODE_A, UUID.fromString("11111111-1111-1111-1111-111111111111"), EASY_NBITS, 3);
+        // v4 区块但验证器默认仅支持到 v3 → 「区块版本号」应判为过新。
+        AssembledBlock v4 = assembleRegisterBlock(
+                null, TestKeyPairs.FLOW_NODE_A, UUID.fromString("11111111-1111-1111-1111-111111111111"), EASY_NBITS, 4);
 
         ChainVerificationResult result = verifier.verify(
-                DatBlockReader.readConcatenated(v3.getDatBytes(), "blk00000000.dat"), optionsWithCentral());
+                DatBlockReader.readConcatenated(v4.getDatBytes(), "blk00000000.dat"), optionsWithCentral());
         assertFalse(result.ok());
         assertTrue(result.allFailures().stream().anyMatch(check -> check.name().equals("区块版本号")),
                 () -> "应检出版本过新:\n" + result.render());

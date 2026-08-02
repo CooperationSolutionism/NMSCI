@@ -19,7 +19,7 @@ services:
   app:
     build:
       context: .
-    image: nmsci:2.0.0
+    image: nmsci:2.0.1
     depends_on:
       postgres:
         condition: service_healthy
